@@ -87,13 +87,13 @@ export default function AddUserPage() {
         <div className="flex justify-between">
           <button
             type="button"
-            className="px-4 py-2 bg-gray-800 text-white text-sm rounded-md hover:bg-gray-700"
+            className="px-4 py-2 bg-blue-700 text-white text-sm rounded-md hover:bg-blue-800"
           >
             Save
           </button>
           <button
             type="button"
-            className="px-4 py-2 bg-gray-500 text-white text-sm rounded-md hover:bg-gray-600"
+            className="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
           >
             Cancel
           </button>

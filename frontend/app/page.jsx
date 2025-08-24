@@ -30,11 +30,11 @@ export default function HomePage() {
 
           {/* Register Card */}
           <div className="bg-white rounded-2xl shadow-lg p-6 space-y-4">
-            <h2 className="text-2xl font-bold text-green-600 mb-2">Register</h2>
+            <h2 className="text-2xl font-bold text-indigo-400 mb-2">Register</h2>
             <p className="text-gray-500">Create a new account:</p>
             <Link
               href="/register"
-              className="block w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition"
+              className="block w-full bg-indigo-400 text-white py-2 rounded-lg hover:bg-indigo-500 transition"
             >
               Register
             </Link>

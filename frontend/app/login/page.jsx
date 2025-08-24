@@ -1,4 +1,6 @@
 "use client";
+
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 
@@ -7,6 +9,9 @@ export default function LoginPage() {
     username: "",
     password: "",
   });
+
+  const [error, setError] = useState("");
+  const router = useRouter();
 
   const handleChange = (e) => {
     setData({
@@ -17,23 +22,34 @@ export default function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // هنا هتبعتي البيانات للـ Django API
-    console.log("Form Data:", data);
+    console.log("Form submitted");
+    setError("");
 
-    // مثال إرسال لـ Django:
-    /*
-    const res = await fetch("http://localhost:8000/api/login/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
+    try {
+      const response = await fetch("http://127.0.0.1:8000/members/login/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+        credentials: "include", // keep session cookie
+      });
 
-    if (res.ok) {
-      console.log("Login successful");
-    } else {
-      console.log("Login failed");
+      const resData = await response.json();
+      console.log("Response data:", resData);
+
+      if (!response.ok || !resData.success) {
+        setError(resData.message || "Login failed");
+        return;
+      }
+
+      console.log("✅ Login success:", resData);
+
+      // Redirect based on backend role
+      router.push(resData.user.redirect);
+
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
+      console.error(err);
     }
-    */
   };
 
   return (
@@ -42,6 +58,9 @@ export default function LoginPage() {
         <h2 className="text-2xl font-bold text-center mb-6">
           Student Complaints System
         </h2>
+        {error && (
+          <p className="text-red-600 text-sm text-center mb-3">{error}</p>
+        )}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block mb-1 font-medium">Username</label>

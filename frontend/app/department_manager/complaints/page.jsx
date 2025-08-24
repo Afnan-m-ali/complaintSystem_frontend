@@ -26,7 +26,7 @@ export default function DepartmentComplaints() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-purple-100 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-indigo-100 p-8">
       <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-6xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
           📂 Complaints & Suggestions for Your Department
@@ -35,7 +35,7 @@ export default function DepartmentComplaints() {
         <div className="overflow-x-auto">
           <table className="min-w-full border-collapse rounded-2xl overflow-hidden shadow-lg">
             <thead>
-              <tr className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+              <tr className="bg-gradient-to-r from-indigo-600 to-blue-400 text-white">
                 <th className="px-6 py-4 text-left">Type</th>
                 <th className="px-6 py-4 text-left">Status</th>
                 <th className="px-6 py-4 text-left">Title</th>

@@ -39,7 +39,7 @@ export default function ComplaintPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-200 via-pink-100 to-indigo-200 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white-200 via-blue-300 to-indigo-200 px-4">
       <div className="bg-white shadow-2xl rounded-3xl p-10 w-full max-w-3xl space-y-8">
         {/* Header */}
         <div className="text-center">
@@ -80,7 +80,7 @@ export default function ComplaintPage() {
               placeholder="Enter title..."
               value={data.title}
               onChange={handleChange}
-              className="w-full border-2 border-pink-200 rounded-xl px-4 py-3 bg-pink-50 text-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-400 transition"
+              className="w-full border-2 border-blue-200 rounded-xl px-4 py-3 bg-blue-50 text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
               required
             />
           </div>
@@ -95,7 +95,7 @@ export default function ComplaintPage() {
               placeholder="Write your complaint or suggestion..."
               value={data.description}
               onChange={handleChange}
-              className="w-full border-2 border-purple-200 rounded-xl px-4 py-3 bg-purple-50 text-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-400 transition"
+              className="w-full border-2 border-indigo-200 rounded-xl px-4 py-3 bg-indigo-50 text-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-400 transition"
               rows="6"
               required
             ></textarea>
@@ -119,7 +119,7 @@ export default function ComplaintPage() {
           <div className="flex justify-center">
             <button
               type="submit"
-              className="px-10 py-4 text-lg font-bold bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white rounded-2xl shadow-lg hover:scale-105 transform transition"
+              className="px-10 py-4 text-lg font-bold bg-gradient-to-r from-indigo-500 via-blue-500 to-blue-400 text-white rounded-2xl shadow-lg hover:scale-105 transform transition"
             >
               🚀 Submit
             </button>

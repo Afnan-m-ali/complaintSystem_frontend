@@ -5,7 +5,7 @@ export default function GeneralManagerProfile() {
   const router = useRouter();
 
   const handleViewUsers = () => {
-    router.push("/general_manager/users");
+    router.push("/general_manager/user");
   };
 
   const handleAddUser = () => {
@@ -17,7 +17,7 @@ export default function GeneralManagerProfile() {
   };
 
   const handleAddDepartment = () => {
-    router.push("/general_manager/departments/add");
+    router.push("/general_manager/department/adddepartment");
   };
 
   return (
@@ -34,7 +34,7 @@ export default function GeneralManagerProfile() {
           </button>
           <button
             onClick={handleAddUser}
-            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+            className="px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800"
           >
             Add User
           </button>
@@ -53,7 +53,7 @@ export default function GeneralManagerProfile() {
           </button>
           <button
             onClick={handleAddDepartment}
-            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+            className="px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800"
           >
             Add Department
           </button>
