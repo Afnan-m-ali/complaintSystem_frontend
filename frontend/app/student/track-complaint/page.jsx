@@ -9,25 +9,25 @@ export default function TrackComplaintPage() {
   const handleTrack = async (e) => {
     e.preventDefault();
 
-    // TODO: Replace this with API call to Django backend
-    // Example API: /api/complaints/?tracking_code=...
-    // For now, we use dummy data
-    if (trackingCode === "50DAC6408A60") {
-      setComplaint({
-        status: "Pending",
-        type: "Complaint",
-        title: "ttt",
-        description: "any thing",
-        created: "Aug. 21, 2025, 6:22 p.m.",
-        trackingCode: "50DAC6408A60",
-        responses: [],
-      });
-      setError("");
-    } else {
+    try {
+      const res = await fetch(
+        `http://127.0.0.1:8000/members/track/?tracking_code=${trackingCode}`
+      );
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Something went wrong.");
+        setComplaint(null);
+      } else {
+        setComplaint(data);
+        setError("");
+      }
+    } catch (err) {
+      setError("Server error. Please try again later.");
       setComplaint(null);
-      setError("Tracking code not found.");
     }
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
@@ -78,11 +78,16 @@ export default function TrackComplaintPage() {
               <strong>Tracking Code:</strong> {complaint.trackingCode}
             </p>
             <div>
-              <strong>Responses:</strong>
+              <strong>Response:</strong>
               {complaint.responses.length === 0 ? (
                 <p>No responses yet.</p>
               ) : (
-                complaint.responses.map((res, idx) => <p key={idx}>{res}</p>)
+                complaint.responses.map((res, idx) => (
+                  <div key={idx} className="border-b py-2">
+                    <p>{res.message}</p>
+                    <p className="text-sm text-gray-500"><strong>Date:</strong> {res.date}</p>
+                  </div>
+                ))
               )}
             </div>
           </div>

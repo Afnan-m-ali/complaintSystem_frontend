@@ -17,10 +17,9 @@ export default function ComplaintPage() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // تجهيز البيانات مع الملف
     const formData = new FormData();
     formData.append("type", data.type);
     formData.append("title", data.title);
@@ -29,14 +28,20 @@ export default function ComplaintPage() {
       formData.append("file", data.file);
     }
 
-    console.log("Complaint Submitted:", data);
+    const res = await fetch("http://127.0.0.1:8000/members/submit/", {
+      method: "POST",
+      body: formData,
+      credentials: "include",
+    });
+    const result = await res.json();
 
-    // TODO: send formData to Django API
-    // fetch("http://127.0.0.1:8000/api/complaints/", {
-    //   method: "POST",
-    //   body: formData,
-    // });
+    if (result.success) {
+      window.location.href = `http://localhost:3000/student/success`;
+    } else {
+      alert(result.message || "Something went wrong");
+    }
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white-200 via-blue-300 to-indigo-200 px-4">
