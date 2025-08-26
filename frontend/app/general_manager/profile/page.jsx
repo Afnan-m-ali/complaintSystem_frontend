@@ -1,12 +1,42 @@
 "use client";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
-export default function GeneralManagerDashboard() {
-  const generalManager = {
-    name: "Super Admin",
-    email: "hanasmsalah105@gmail.com",
-    role: "General Manager",
-  };
+export default function GeneralManagerProfile() {
+  const [general_manager, setGeneralManager] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchStudent() {
+      try {
+        const res = await fetch("http://127.0.0.1:8000/members/general/profile/", {
+          method: "GET",
+          credentials: "include",
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          setGeneralManager(data.user);
+        } else {
+          console.error("Error:", data.message);
+        }
+      } catch (error) {
+        console.error("Request failed:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchStudent();
+  }, []);
+
+  if (loading) {
+    return <p className="text-center text-lg">Loading...</p>;
+  }
+
+  if (!general_manager) {
+    return <p className="text-center text-red-500">Unauthorized. Please log in.</p>;
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-indigo-100 px-4">
@@ -14,7 +44,7 @@ export default function GeneralManagerDashboard() {
         {/* Header */}
         <div className="flex flex-col items-center space-y-4 mb-8">
           <img
-            src={`https://ui-avatars.com/api/?name=${generalManager.name.replace(
+            src={`https://ui-avatars.com/api/?name=${general_manager.name.replace(
               " ",
               "+"
             )}&size=128&background=ec4899&color=fff`}
@@ -22,7 +52,7 @@ export default function GeneralManagerDashboard() {
             className="w-32 h-32 rounded-full shadow-lg border-4 border-blue-500"
           />
           <h2 className="text-3xl font-bold text-gray-800">
-            Welcome, {generalManager.name} 👑
+            Welcome, {general_manager.name} 👑
           </h2>
           <p className="text-gray-500">General Manager Dashboard</p>
         </div>
@@ -31,15 +61,15 @@ export default function GeneralManagerDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div className="bg-blue-50 p-6 rounded-2xl shadow-inner">
             <p className="text-sm text-gray-500">Full Name</p>
-            <p className="text-lg font-semibold">{generalManager.name}</p>
+            <p className="text-lg font-semibold">{general_manager.name}</p>
           </div>
           <div className="bg-blue-50 p-6 rounded-2xl shadow-inner">
             <p className="text-sm text-gray-500">Email</p>
-            <p className="text-lg font-semibold">{generalManager.email}</p>
+            <p className="text-lg font-semibold">{general_manager.email}</p>
           </div>
           <div className="bg-blue-50 p-6 rounded-2xl shadow-inner">
-            <p className="text-sm text-gray-500">Role</p>
-            <p className="text-lg font-semibold">{generalManager.role}</p>
+            <p className="text-sm text-gray-500">Username</p>
+            <p className="text-lg font-semibold">{general_manager.username}</p>
           </div>
           <div className="bg-blue-50 p-6 rounded-2xl shadow-inner">
             <p className="text-sm text-gray-500">Dashboard Info</p>

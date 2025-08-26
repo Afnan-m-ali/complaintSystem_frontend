@@ -1,110 +1,141 @@
+// app/general_manager/complaints/page.jsx (or whichever path you use)
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function ComplaintsTable() {
-  // مثال على الداتا (بعد كده هتيجي من API)
-  const complaints = [
-    {
-      id: 1,
-      type: "Technical",
-      status: "Pending",
-      title: "Slow Internet",
-      description: "The lab internet is very slow during peak hours.",
-      currentDepartment: "IT",
-      attachment: "network_issue.png",
-    },
-    {
-      id: 2,
-      type: "HR",
-      status: "Resolved",
-      title: "Salary Delay",
-      description: "Delay in salary payment for last month.",
-      currentDepartment: "HR",
-      attachment: "salary_delay.pdf",
-    },
-  ];
+export default function AllComplaintsPage() {
+  const [complaints, setComplaints] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const [selectedDept, setSelectedDept] = useState({}); // { [ComplaintId]: DepartmentId }
+  const [loading, setLoading] = useState(true);
 
-  const departments = ["IT", "HR", "Finance", "Admin"];
+  // Fetch complaints + departments from the same endpoint your Django view serves
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("http://127.0.0.1:8000/members/allComplaints/", {
+        method: "GET",
+        credentials: "include",
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || data.message || "Failed to fetch");
 
-  // تخزين الاختيار لكل شكوى
-  const [assignments, setAssignments] = useState({});
+      const complaintsData = data.complaints || [];
+      const departmentsData = data.departments || [];
 
-  const handleAssign = (complaintId) => {
-    const selectedDept = assignments[complaintId];
-    if (selectedDept) {
-      alert(`Complaint ${complaintId} assigned to ${selectedDept}`);
-      // هنا تقدر تبعت الـ API عشان تحدث الداتا
-    } else {
-      alert("Please select a department before assigning.");
+      setComplaints(complaintsData);
+      setDepartments(departmentsData);
+
+      // Pre-fill selectedDept for complaints that already have a Department name
+      const preSelected = {};
+      complaintsData.forEach((c) => {
+        if (c.Department) {
+          const match = departmentsData.find((d) => String(d.DepartmentName) === String(c.Department));
+          if (match) preSelected[c.ComplaintId] = match.DepartmentId;
+        }
+      });
+      setSelectedDept(preSelected);
+    } catch (err) {
+      console.error("fetchData error:", err);
+      alert("Failed to load complaints: " + err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  // Assign handler: sends PascalCase keys because your view expects ComplaintId & DepartmentId
+  const handleAssign = async (complaintId) => {
+    const deptId = selectedDept[complaintId];
+    if (!deptId) {
+      return alert("Select a department first");
+    }
+
+    try {
+      const res = await fetch("http://127.0.0.1:8000/members/allComplaints/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          ComplaintId: complaintId,
+          DepartmentId: Number(deptId),
+        }),
+      });
+
+      const data = await res.json();
+
+      // your Django view returns {"success": true, ...} on success
+      if (res.ok && data.success) {
+        // update UI locally
+        const deptName = (departments.find((d) => String(d.DepartmentId) === String(deptId)) || {}).DepartmentName || null;
+        setComplaints((prev) =>
+          prev.map((c) =>
+            c.ComplaintId === complaintId ? { ...c, Status: "In Review", Department: deptName } : c
+          )
+        );
+        alert(data.message || "Assigned successfully");
+      } else {
+        // backend may return {"error": "..."} or {"success": False, "message": "..."}
+        throw new Error(data.error || data.message || "Assign failed");
+      }
+    } catch (err) {
+      console.error("assign error:", err);
+      alert("Assign failed: " + err.message);
+    }
+  };
+
+  if (loading) return <div className="p-6">Loading complaints...</div>;
+
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <div className="bg-white shadow-md rounded-lg p-6">
-        <h2 className="text-xl font-semibold mb-4">All Complaints</h2>
-        <table className="w-full border-collapse border border-gray-300">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="border border-gray-300 px-4 py-2">Type</th>
-              <th className="border border-gray-300 px-4 py-2">Status</th>
-              <th className="border border-gray-300 px-4 py-2">Title</th>
-              <th className="border border-gray-300 px-4 py-2">Description</th>
-              <th className="border border-gray-300 px-4 py-2">Current Department</th>
-              <th className="border border-gray-300 px-4 py-2">Attachment</th>
-              <th className="border border-gray-300 px-4 py-2">Assign</th>
-            </tr>
-          </thead>
-          <tbody>
-            {complaints.map((complaint) => (
-              <tr key={complaint.id}>
-                <td className="border border-gray-300 px-4 py-2">{complaint.type}</td>
-                <td
-                  className={`border border-gray-300 px-4 py-2 font-semibold ${
-                    complaint.status === "Pending"
-                      ? "text-yellow-600"
-                      : "text-green-600"
-                  }`}
+    <div className="p-6">
+      <h1 className="text-xl font-bold mb-4">All Complaints</h1>
+
+      <table className="w-full border-collapse border border-gray-300">
+        <thead>
+          <tr className="bg-gray-100">
+            <th className="p-2 border">Title</th>
+            <th className="p-2 border">Status</th>
+            <th className="p-2 border">Assign To</th>
+            <th className="p-2 border">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {complaints.map((c) => (
+            <tr key={c.ComplaintId} className="border-t">
+              <td className="p-2 border">{c.Title}</td>
+              <td className="p-2 border">{c.Status}</td>
+
+              <td className="p-2 border">
+                <select
+                  value={selectedDept[c.ComplaintId] || ""}
+                  onChange={(e) =>
+                    setSelectedDept({ ...selectedDept, [c.ComplaintId]: e.target.value })
+                  }
+                  className="border p-1 rounded"
                 >
-                  {complaint.status}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">{complaint.title}</td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {complaint.description}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {complaint.currentDepartment}
-                </td>
-                <td className="border border-gray-300 px-4 py-2 text-blue-600 underline cursor-pointer">
-                  {complaint.attachment}
-                </td>
-                <td className="border border-gray-300 px-4 py-2 flex gap-2">
-                  <select
-                    className="border rounded px-2 py-1"
-                    value={assignments[complaint.id] || ""}
-                    onChange={(e) =>
-                      setAssignments({ ...assignments, [complaint.id]: e.target.value })
-                    }
-                  >
-                    <option value="">Select Department</option>
-                    {departments.map((dept, idx) => (
-                      <option key={idx} value={dept}>
-                        {dept}
-                      </option>
-                    ))}
-                  </select>
-                  <button
-                    onClick={() => handleAssign(complaint.id)}
-                    className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
-                  >
-                    Assign
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                  <option value="">-- Select Department --</option>
+                  {departments.map((d) => (
+                    <option key={d.DepartmentId} value={d.DepartmentId}>
+                      {d.DepartmentName}
+                    </option>
+                  ))}
+                </select>
+              </td>
+
+              <td className="p-2 border">
+                <button
+                  onClick={() => handleAssign(c.ComplaintId)}
+                  className="bg-blue-500 text-white px-3 py-1 rounded"
+                >
+                  Assign
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
