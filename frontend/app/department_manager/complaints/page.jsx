@@ -1,29 +1,72 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function DepartmentComplaints() {
-  // داتا ثابتة مؤقتا (بعد كده تجيب من API Django)
-  const [complaints, setComplaints] = useState([
-    {
-      id: 1,
-      type: "Complaint",
-      status: "In Review",
-      title: "Chatbot Issue",
-      description: "Chatbot test is not working properly.",
-      createdDate: "Aug. 21, 2025, 6:38 p.m.",
-      attachment: "/attachments/Basics_Python_Sheet.pdf",
-      response: "",
-    },
-  ]);
+  const [complaints, setComplaints] = useState([]);
 
-  // Send Response
-  const handleResponse = (id) => {
-    const updated = complaints.map((c) =>
-      c.id === id ? { ...c, status: "Responded" } : c
-    );
-    setComplaints(updated);
-    alert("Response sent successfully!");
+  // Fetch complaints
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/members/departmentComplaints/", {
+      method: "GET",
+      credentials: "include",
+    })
+      .then(async (res) => {
+        const text = await res.text();
+        try {
+          const data = JSON.parse(text);
+          setComplaints(data);
+        } catch (err) {
+          console.error("❌ JSON parse error, response was:", text);
+        }
+      })
+      .catch((err) => console.error("Fetch error:", err));
+  }, []);
+
+  // Send response
+  const handleResponse = (id, response) => {
+    fetch("http://127.0.0.1:8000/members/departmentComplaints/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCookie("csrftoken"), // ✅ send CSRF
+      },
+      credentials: "include",
+      body: JSON.stringify({ complaint_id: id, response }),
+    })
+      .then(async (res) => {
+        const text = await res.text();
+        try {
+          const data = JSON.parse(text);
+          if (data.success) {
+            const updated = complaints.map((c) =>
+              c.id === id ? { ...c, status: "Resolved", response } : c
+            );
+            setComplaints(updated);
+          } else {
+            alert(data.error || "Something went wrong");
+          }
+        } catch {
+          console.error("❌ Backend returned non-JSON:", text);
+        }
+      });
   };
+
+  // Helper to read cookies
+  function getCookie(name) {
+    if (typeof document === "undefined") return null;
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.startsWith(name + "=")) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-indigo-100 p-8">
@@ -47,16 +90,11 @@ export default function DepartmentComplaints() {
             </thead>
             <tbody>
               {complaints.map((c) => (
-                <tr
-                  key={c.id}
-                  className="border-b hover:bg-indigo-50 transition"
-                >
+                <tr key={c.id} className="border-b hover:bg-indigo-50 transition">
                   <td className="px-6 py-4 font-medium">{c.type}</td>
                   <td
                     className={`px-6 py-4 font-semibold ${
-                      c.status === "In Review"
-                        ? "text-yellow-600"
-                        : "text-green-600"
+                      c.status === "In Review" ? "text-yellow-600" : "text-green-600"
                     }`}
                   >
                     {c.status}
@@ -67,17 +105,24 @@ export default function DepartmentComplaints() {
                     {c.createdDate}
                   </td>
                   <td className="px-6 py-4">
-                    <a
-                      href={c.attachment}
-                      target="_blank"
-                      className="text-indigo-600 underline hover:text-indigo-800"
-                    >
-                      View File
-                    </a>
+                    {c.attachments && c.attachments.length > 0 ? (
+                      c.attachments.map((url, i) => (
+                        <a
+                          key={i}
+                          href={url}
+                          target="_blank"
+                          className="text-indigo-600 underline hover:text-indigo-800 block"
+                        >
+                          View File {i + 1}
+                        </a>
+                      ))
+                    ) : (
+                      <span className="text-gray-400">No File</span>
+                    )}
                   </td>
                   <td className="px-6 py-4">
                     <textarea
-                      value={c.response}
+                      value={c.response || ""}
                       onChange={(e) => {
                         const updated = complaints.map((x) =>
                           x.id === c.id ? { ...x, response: e.target.value } : x
@@ -88,7 +133,7 @@ export default function DepartmentComplaints() {
                       className="w-full p-2 border rounded-xl focus:ring-2 focus:ring-indigo-500 mb-2"
                     />
                     <button
-                      onClick={() => handleResponse(c.id)}
+                      onClick={() => handleResponse(c.id, c.response)}
                       className="w-full bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 transition"
                     >
                       Send Response
