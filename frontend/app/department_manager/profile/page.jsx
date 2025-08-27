@@ -1,14 +1,43 @@
 "use client";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 export default function DepartmentManagerProfile() {
-  // مثال داتا ثابتة، بعدين هتجيبيها من API Django
-  const manager = {
-    name: "Sohila Ahmed",
-    email: "sohila24ahmed@gmail.com",
-    role: "Department Manager",
-    department: "Testing",
-  };
+  const [manager, setManager] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchProfile() {
+      try {
+        const response = await fetch("http://127.0.0.1:8000/members/department/profile/", {
+          method: "GET",
+          credentials: "include", // 🔑 important if using Django sessions
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          setManager(data.user);
+        } else {
+          console.error("Error:", data.message);
+        }
+      } catch (error) {
+        console.error("Fetch error:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchProfile();
+  }, []);
+
+  if (loading) {
+    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  }
+
+  if (!manager) {
+    return <div className="flex justify-center items-center h-screen">Failed to load profile</div>;
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-blue-200 px-4">
