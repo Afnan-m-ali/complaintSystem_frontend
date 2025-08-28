@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { User, ShieldCheck } from "lucide-react"; // أيقونة البروفايل + اللوجو
+import { User, ShieldCheck, LogOut } from "lucide-react"; // أيقونة البروفايل + اللوجو
 
 export default function DepartmentManagerLayout({ children }) {
   const pathname = usePathname();
@@ -32,6 +32,7 @@ export default function DepartmentManagerLayout({ children }) {
         </svg>
       ),
     },
+    { href: "/logout", label: "Logout", icon: <LogOut className="w-5 h-5" /> },
   ];
 
   return (

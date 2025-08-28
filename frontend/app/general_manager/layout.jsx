@@ -7,6 +7,7 @@ import {
   FileText,
   MessageCircle,
   UserPlus,
+  LogOut,
 } from "lucide-react"; // أيقونات
 
 export default function GeneralManagerLayout({ children }) {
@@ -16,7 +17,8 @@ export default function GeneralManagerLayout({ children }) {
     { href: "/general_manager/profile", label: "Profile", icon: <User className="w-5 h-5" /> },
     { href: "/general_manager/complaints", label: "Complaints", icon: <FileText className="w-5 h-5" /> },
     { href: "/general_manager/responses", label: "Responses", icon: <MessageCircle className="w-5 h-5" /> },
-    { href: "/general_manager/admin", label: "Add Admins", icon: <UserPlus className="w-5 h-5" /> },
+    { href: "/general_manager/admin", label: "Add Managers / Departments", icon: <UserPlus className="w-5 h-5" /> },
+    { href: "/logout", label: "Logout", icon: <LogOut className="w-5 h-5" /> },
   ];
 
   return (

@@ -5,11 +5,11 @@ export default function GeneralManagerProfile() {
   const router = useRouter();
 
   const handleViewUsers = () => {
-    router.push("/general_manager/user");
+    router.push("/general_manager/users");
   };
 
   const handleAddUser = () => {
-    router.push("/general_manager/users/AddUser"); // الرابط الجديد
+    router.push("/general_manager/user/addUser"); // الرابط الجديد
   };
 
   const handleViewDepartments = () => {

@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { User, FileText, ShieldCheck } from "lucide-react"; // أيقونات
+import { User, FileText, ShieldCheck,LogOut } from "lucide-react"; // أيقونات
 
 export default function DepartmentManagerLayout({ children }) {
   const pathname = usePathname();
@@ -17,6 +17,7 @@ export default function DepartmentManagerLayout({ children }) {
       label: "Complaints / Suggestions",
       icon: <FileText className="w-5 h-5 text-gray-700" />, // أيقونة مختلفة للشكوى
     },
+    { href: "/logout", label: "Logout", icon: <LogOut className="w-5 h-5" /> },
   ];
 
   return (
