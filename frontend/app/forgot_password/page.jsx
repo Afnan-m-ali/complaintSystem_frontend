@@ -21,20 +21,31 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <form onSubmit={handleSubmit} className="bg-white p-6 shadow rounded w-96">
-        <h2 className="text-2xl font-bold mb-4">Forgot Password</h2>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
+      <form className="bg-white dark:bg-gray-800 p-6 shadow rounded w-96 transition-colors duration-300"
+        onSubmit={handleSubmit}
+      >
+        <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">
+          Forgot Password
+        </h2>
         <input
           type="email"
           placeholder="Enter your email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full border px-3 py-2 rounded mb-3"
+          className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-300 px-3 py-2 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        <button className="w-full bg-blue-500 text-white py-2 rounded">
+        <button
+          type="submit"
+          className="w-full bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white py-2 rounded transition-colors duration-300"
+        >
           Send Reset Link
         </button>
-        {message && <p className="mt-3 text-center text-sm">{message}</p>}
+        {message && (
+          <p className="mt-3 text-center text-sm text-gray-700 dark:text-gray-300">
+            {message}
+          </p>
+        )}
       </form>
     </div>
   );

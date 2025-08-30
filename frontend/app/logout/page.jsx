@@ -22,8 +22,10 @@ export default function Logout() {
   }, [router]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <p className="text-xl font-semibold text-gray-700">Logging out...</p>
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+      <p className="text-xl font-semibold text-gray-700 dark:text-gray-200">
+        Logging out...
+      </p>
     </div>
   );
 }

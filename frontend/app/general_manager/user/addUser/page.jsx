@@ -6,7 +6,7 @@ export default function AddUserPage() {
     username: "",
     email: "",
     name: "",
-    role: "Student",
+    role: "DepartmentManager", // fixed role
     dept: "",
     password: "",
   });
@@ -40,17 +40,17 @@ export default function AddUserPage() {
         body: JSON.stringify(formData),
       });
 
-      const data = await res.text();
+      const data = await res.json();
 
       if (!res.ok) {
-        setMessage(data);
+        setMessage(`❌ ${data.error}`);
       } else {
-        setMessage(data);
+        setMessage(`✅ ${data.message}`);
         setFormData({
           username: "",
           email: "",
           name: "",
-          role: "Student",
+          role: "DepartmentManager", // reset with default role
           dept: "",
           password: "",
         });
@@ -60,16 +60,17 @@ export default function AddUserPage() {
     }
   };
 
+
   return (
-    <div className="max-w-lg mx-auto mt-10 p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
-      <h2 className="text-xl font-semibold text-center text-gray-800 mb-6">
+    <div className="max-w-lg mx-auto mt-10 p-6 bg-gray-900 border border-gray-700 rounded-lg shadow-lg text-gray-200">
+      <h2 className="text-xl font-semibold text-center text-white mb-6">
         Add User
       </h2>
 
       <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
         {/* Username */}
         <div>
-          <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="username" className="block text-sm font-medium text-gray-300">
             Username
           </label>
           <input
@@ -78,13 +79,13 @@ export default function AddUserPage() {
             value={formData.username}
             onChange={handleChange}
             placeholder="Enter username"
-            className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300 text-sm"
+            className="mt-1 w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring focus:ring-blue-500 bg-gray-800 text-gray-200 text-sm"
           />
         </div>
 
         {/* Email */}
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="email" className="block text-sm font-medium text-gray-300">
             Email
           </label>
           <input
@@ -93,13 +94,13 @@ export default function AddUserPage() {
             value={formData.email}
             onChange={handleChange}
             placeholder="Enter email"
-            className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300 text-sm"
+            className="mt-1 w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring focus:ring-blue-500 bg-gray-800 text-gray-200 text-sm"
           />
         </div>
 
         {/* Full Name */}
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="name" className="block text-sm font-medium text-gray-300">
             Full Name
           </label>
           <input
@@ -108,36 +109,20 @@ export default function AddUserPage() {
             value={formData.name}
             onChange={handleChange}
             placeholder="Enter full name"
-            className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300 text-sm"
+            className="mt-1 w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring focus:ring-blue-500 bg-gray-800 text-gray-200 text-sm"
           />
-        </div>
-
-        {/* Role */}
-        <div>
-          <label htmlFor="role" className="block text-sm font-medium text-gray-700">
-            Role
-          </label>
-          <select
-            id="role"
-            value={formData.role}
-            onChange={handleChange}
-            className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300 text-sm"
-          >
-            <option>Student</option>
-            <option>DepartmentManager</option>
-          </select>
         </div>
 
         {/* Department */}
         <div>
-          <label htmlFor="dept" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="dept" className="block text-sm font-medium text-gray-300">
             Department
           </label>
           <select
             id="dept"
             value={formData.dept}
             onChange={handleChange}
-            className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300 text-sm"
+            className="mt-1 w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring focus:ring-blue-500 bg-gray-800 text-gray-200 text-sm"
           >
             <option value="">Select department</option>
             {departments.map((d, idx) => (
@@ -150,7 +135,7 @@ export default function AddUserPage() {
 
         {/* Password */}
         <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="password" className="block text-sm font-medium text-gray-300">
             Password
           </label>
           <input
@@ -159,7 +144,7 @@ export default function AddUserPage() {
             value={formData.password}
             onChange={handleChange}
             placeholder="Enter password"
-            className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300 text-sm"
+            className="mt-1 w-full px-3 py-2 border border-gray-600 rounded-md focus:outline-none focus:ring focus:ring-blue-500 bg-gray-800 text-gray-200 text-sm"
           />
         </div>
 
@@ -167,20 +152,27 @@ export default function AddUserPage() {
         <div className="flex justify-between">
           <button
             type="submit"
-            className="px-4 py-2 bg-blue-700 text-white text-sm rounded-md hover:bg-blue-800"
+            className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700"
           >
             Save
           </button>
           <button
             type="button"
-            className="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
+            className="px-4 py-2 bg-gray-600 text-white text-sm rounded-md hover:bg-gray-700"
           >
             Cancel
           </button>
         </div>
       </form>
 
-      {message && <p className="mt-4 text-center text-sm text-red-500">{message}</p>}
+      {message && (
+        <p
+          className={`mt-4 text-center text-sm ${message.startsWith("✅") ? "text-white-400" : "text-red-400"
+            }`}
+        >
+          {message}
+        </p>
+      )}
     </div>
   );
 }

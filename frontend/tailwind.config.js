@@ -107,6 +107,7 @@ module.exports = {
         "body-sm": ["14px", "22px"],
         "body-xs": ["12px", "20px"],
       },
+      
       spacing: {
         4.5: "1.125rem",
         5.5: "1.375rem",

@@ -63,8 +63,8 @@ export default function StudentProfile() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-white to-indigo-200 px-4">
-      <div className="bg-white shadow-2xl rounded-3xl p-4 w-full max-w-2xl">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-white to-indigo-200 dark:from-gray-900 dark:via-gray-950 dark:to-gray-800 px-4">
+      <div className="bg-white dark:bg-gray-900 shadow-2xl rounded-3xl p-10 w-full max-w-4xl">
         {/* Header */}
         <div className="flex flex-col items-center space-y-4 mb-8">
           <img
@@ -72,29 +72,37 @@ export default function StudentProfile() {
             alt="Profile Avatar"
             className="w-32 h-32 rounded-full shadow-lg border-4 border-indigo-500"
           />
-          <h2 className="text-3xl font-bold text-gray-800">
+          <h2 className="text-3xl font-bold text-gray-800 dark:text-white">
             Welcome, {student.name} 🎓
           </h2>
-          <p className="text-gray-500">Student Profile</p>
+          <p className="text-gray-500 dark:text-gray-400">Student Profile</p>
         </div>
 
         {/* Info Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <div className="bg-indigo-50 p-6 rounded-2xl shadow-inner">
-            <p className="text-sm text-gray-500">Full Name</p>
-            <p className="text-lg font-semibold">{student.name}</p>
+          <div className="bg-indigo-50 dark:bg-gray-800 p-6 rounded-2xl shadow-inner">
+            <p className="text-sm text-gray-500 dark:text-gray-400">Full Name</p>
+            <p className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+              {student.name}
+            </p>
           </div>
-          <div className="bg-indigo-50 p-6 rounded-2xl shadow-inner">
-            <p className="text-sm text-gray-500">Email</p>
-            <p className="text-lg font-semibold break-words">{student.email}</p>
+          <div className="bg-indigo-50 dark:bg-gray-800 p-6 rounded-2xl shadow-inner">
+            <p className="text-sm text-gray-500 dark:text-gray-400">Email</p>
+            <p className="text-lg font-semibold text-gray-800 dark:text-gray-200 break-words">
+              {student.email}
+            </p>
           </div>
-          <div className="bg-indigo-50 p-6 rounded-2xl shadow-inner">
-            <p className="text-sm text-gray-500">GPA</p>
-            <p className="text-lg font-semibold">{student.gpa ?? "N/A"}</p>
+          <div className="bg-indigo-50 dark:bg-gray-800 p-6 rounded-2xl shadow-inner">
+            <p className="text-sm text-gray-500 dark:text-gray-400">GPA</p>
+            <p className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+              {student.gpa ?? "N/A"}
+            </p>
           </div>
-          <div className="bg-indigo-50 p-6 rounded-2xl shadow-inner">
-            <p className="text-sm text-gray-500">Username</p>
-            <p className="text-lg font-semibold">{student.username}</p>
+          <div className="bg-indigo-50 dark:bg-gray-800 p-6 rounded-2xl shadow-inner">
+            <p className="text-sm text-gray-500 dark:text-gray-400">Username</p>
+            <p className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+              {student.username}
+            </p>
           </div>
         </div>
 

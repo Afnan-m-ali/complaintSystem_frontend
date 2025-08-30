@@ -8,7 +8,7 @@ import {
   MessageCircle,
   UserPlus,
   LogOut,
-} from "lucide-react"; // أيقونات
+} from "lucide-react";
 
 export default function GeneralManagerLayout({ children }) {
   const pathname = usePathname();
@@ -18,46 +18,57 @@ export default function GeneralManagerLayout({ children }) {
     { href: "/general_manager/complaints", label: "Complaints", icon: <FileText className="w-5 h-5" /> },
     { href: "/general_manager/responses", label: "Responses", icon: <MessageCircle className="w-5 h-5" /> },
     { href: "/general_manager/admin", label: "Add Managers / Departments", icon: <UserPlus className="w-5 h-5" /> },
-    { href: "/logout", label: "Logout", icon: <LogOut className="w-5 h-5" /> },
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 via-white to-indigo-100">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-blue-50 via-white to-indigo-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors duration-300">
       {/* Navbar */}
-      <nav className="bg-white shadow-md p-4 flex justify-between items-center">
+      <nav className="bg-white dark:bg-gray-800 shadow-md p-4 flex items-center justify-between transition-colors duration-300">
         {/* Logo */}
         <div className="flex items-center space-x-2">
-          <ShieldCheck className="w-10 h-10 text-blue-600" />
-          {/* <span className="font-bold text-xl text-blue-600">General Manager</span> */}
+          <ShieldCheck className="w-10 h-10 text-blue-600 dark:text-blue-400" />
         </div>
 
-        {/* Links */}
-        <div className="flex space-x-6">
+        {/* Links in center */}
+        <div className="flex space-x-6 justify-center flex-1">
           {links.map((link) => {
             const isActive = pathname === link.href;
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`flex items-center space-x-2 font-medium relative transition ${
+                className={`flex items-center space-x-2 font-medium relative transition-colors duration-300 ${
                   isActive
-                    ? "text-blue-600"
-                    : "text-gray-700 hover:text-blue-500"
+                    ? "text-blue-600 dark:text-blue-400"
+                    : "text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400"
                 }`}
               >
                 {link.icon}
                 <span>{link.label}</span>
                 {isActive && (
-                  <span className="absolute left-0 -bottom-1 w-full h-0.5 bg-blue-600 rounded"></span>
+                  <span className="absolute left-0 -bottom-1 w-full h-0.5 bg-blue-600 dark:bg-blue-400 rounded"></span>
                 )}
               </Link>
             );
           })}
         </div>
+
+        {/* Logout on right */}
+        <div>
+          <Link
+            href="/logout"
+            className="flex items-center space-x-2 font-medium text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-300"
+          >
+            <LogOut className="w-5 h-5" />
+            <span>Logout</span>
+          </Link>
+        </div>
       </nav>
 
       {/* Main Content */}
-      <main className="flex-1 p-6">{children}</main>
+      <main className="flex-1 p-6 bg-white dark:bg-gray-900 transition-colors duration-300">
+        {children}
+      </main>
     </div>
   );
 }

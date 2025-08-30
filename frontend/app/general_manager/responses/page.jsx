@@ -6,7 +6,6 @@ export default function ResponsesPage() {
   const [responses, setResponses] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // fetch responses
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -17,7 +16,7 @@ export default function ResponsesPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to fetch responses");
 
-      setResponses(Array.isArray(data) ? data : []); // ensure array
+      setResponses(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("fetchData error:", err);
       alert("Failed to load responses: " + err.message);
@@ -30,7 +29,6 @@ export default function ResponsesPage() {
     fetchData();
   }, []);
 
-  // toggle visibility
   const handleToggle = async (id, currentVisible) => {
     try {
       const res = await fetch(
@@ -46,7 +44,6 @@ export default function ResponsesPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to update visibility");
 
-      // update UI
       setResponses((prev) =>
         prev.map((r) =>
           r.id === id ? { ...r, visible: !currentVisible } : r
@@ -58,45 +55,75 @@ export default function ResponsesPage() {
     }
   };
 
-  if (loading) return <div className="p-6">Loading responses...</div>;
+  if (loading)
+    return (
+      <div className="p-6 text-gray-800 dark:text-gray-200 font-medium">
+        Loading responses...
+      </div>
+    );
 
   return (
-    <div className="p-6">
-      <h1 className="text-xl font-bold mb-4">Responses</h1>
+    <div className="p-6 bg-gray-100 dark:bg-gray-900 min-h-screen transition-colors duration-300">
+      <h1 className="text-2xl md:text-3xl font-bold mb-6 text-blue-700 dark:text-blue-400">
+        Responses
+      </h1>
 
-      <table className="w-full border-collapse border border-gray-300">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="p-2 border">Complaint</th>
-            <th className="p-2 border">Message</th>
-            <th className="p-2 border">Department</th>
-            <th className="p-2 border">Date</th>
-            <th className="p-2 border">Visible</th>
-            <th className="p-2 border">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {responses.map((r) => (
-            <tr key={r.id} className="border-t">
-              <td className="p-2 border">{r.complaintTitle}</td>
-              <td className="p-2 border">{r.responseMessage}</td>
-              <td className="p-2 border">{r.senderDepartment}</td>
-              <td className="p-2 border">{r.responseDate}</td>
-              <td className="p-2 border">{r.visible ? "Yes" : "No"}</td>
-              <td className="p-2 border">
-                <button
-                  onClick={() => handleToggle(r.id, r.visible)}
-                  className={`px-3 py-1 rounded text-white ${
-                    r.visible ? "bg-red-500" : "bg-green-500"
-                  }`}
-                >
-                  {r.visible ? "Hide" : "Show"}
-                </button>
-              </td>
+      <div className="overflow-x-auto shadow-lg rounded-xl">
+        <table className="min-w-full border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+          <thead className="bg-blue-600 text-white dark:bg-blue-800">
+            <tr>
+              <th className="px-6 py-3 text-left text-sm md:text-base">Complaint</th>
+              <th className="px-6 py-3 text-left text-sm md:text-base">Message</th>
+              <th className="px-6 py-3 text-left text-sm md:text-base">Department</th>
+              <th className="px-6 py-3 text-left text-sm md:text-base">Date</th>
+              <th className="px-6 py-3 text-left text-sm md:text-base">Visible</th>
+              <th className="px-6 py-3 text-left text-sm md:text-base">Action</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="divide-y divide-gray-200 dark:divide-gray-700 bg-white dark:bg-gray-800">
+            {responses.map((r) => (
+              <tr
+                key={r.id}
+                className="hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors"
+              >
+                <td className="px-6 py-4 text-gray-800 dark:text-gray-200 font-medium">
+                  {r.complaintTitle}
+                </td>
+                <td className="px-6 py-4 text-gray-600 dark:text-gray-300">
+                  {r.responseMessage}
+                </td>
+                <td className="px-6 py-4 text-gray-800 dark:text-gray-200">
+                  {r.senderDepartment}
+                </td>
+                <td className="px-6 py-4 text-gray-700 dark:text-gray-300">
+                  {r.responseDate}
+                </td>
+                <td className="px-6 py-4 text-gray-800 dark:text-gray-200">
+                  {r.visible ? "Yes" : "No"}
+                </td>
+                <td className="px-6 py-4">
+                  <button
+                    onClick={() => handleToggle(r.id, r.visible)}
+                    className={`px-4 py-2 rounded text-white text-sm md:text-base font-medium transition ${
+                      r.visible ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"
+                    }`}
+                  >
+                    {r.visible ? "Hide" : "Show"}
+                  </button>
+                </td>
+              </tr>
+            ))}
+
+            {responses.length === 0 && (
+              <tr>
+                <td colSpan="6" className="p-6 text-center text-gray-500 dark:text-gray-400 text-base">
+                  No responses found
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
