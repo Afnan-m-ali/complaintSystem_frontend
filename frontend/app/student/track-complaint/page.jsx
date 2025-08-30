@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-
+const API_URL = "https://hana74.pythonanywhere.com";
 export default function TrackComplaintPage() {
   const [trackingCode, setTrackingCode] = useState("");
   const [complaint, setComplaint] = useState(null);
@@ -11,7 +11,7 @@ export default function TrackComplaintPage() {
 
     try {
       const res = await fetch(
-        `http://127.0.0.1:8000/members/track/?tracking_code=${trackingCode}`
+        `${API_URL}/members/track/?tracking_code=${trackingCode}`
       );
       const data = await res.json();
 

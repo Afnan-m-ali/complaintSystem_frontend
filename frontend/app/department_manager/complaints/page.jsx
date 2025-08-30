@@ -1,12 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
 
+const API_URL = "https://hana74.pythonanywhere.com";
+
 export default function DepartmentComplaints() {
   const [complaints, setComplaints] = useState([]);
 
   // Fetch complaints
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/members/departmentComplaints/", {
+    fetch(`${API_URL}/members/departmentComplaints/`, {
       method: "GET",
       credentials: "include",
     })
@@ -24,7 +26,7 @@ export default function DepartmentComplaints() {
 
   // Send response
   const handleResponse = (id, response) => {
-    fetch("http://127.0.0.1:8000/members/departmentComplaints/", {
+    fetch(`${API_URL}/members/departmentComplaints/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

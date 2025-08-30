@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-
+const API_URL = "https://hana74.pythonanywhere.com";
 export default function ResetPasswordPage() {
   const params = useParams();
   const uid = params.uid;
@@ -16,7 +16,7 @@ export default function ResetPasswordPage() {
     setMessage("");
 
     const res = await fetch(
-      `http://127.0.0.1:8000/members/password-reset-confirm/${uid}/${token}/`,
+      `${API_URL}/members/password-reset-confirm/${uid}/${token}/`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },

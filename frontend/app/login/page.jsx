@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
-
+const API_URL = "https://hana74.pythonanywhere.com";
 export default function LoginPage() {
   const [data, setData] = useState({
     username: "",
@@ -26,7 +26,7 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/members/login/", {
+      const response = await fetch(`${API_URL}/members/login/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),

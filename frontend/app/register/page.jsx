@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
-
+const API_URL = "https://hana74.pythonanywhere.com";
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
     username: "",
@@ -57,7 +57,7 @@ export default function RegisterPage() {
     setError("");
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/members/register/", {
+      const response = await fetch(`${API_URL}/members/register/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

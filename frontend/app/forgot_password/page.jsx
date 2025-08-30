@@ -1,7 +1,7 @@
 // app/forgot-password/page.jsx
 "use client";
 import { useState } from "react";
-
+const API_URL = "https://hana74.pythonanywhere.com";
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -9,8 +9,8 @@ export default function ForgotPassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
-
-    const res = await fetch("http://127.0.0.1:8000/members/password-reset/", {
+    
+    const res = await fetch(`${API_URL}/members/password-reset/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email }),

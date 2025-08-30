@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
+const API_URL = "https://hana74.pythonanywhere.com";
+
 export default function DepartmentManagerProfile() {
   const [manager, setManager] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -10,7 +12,7 @@ export default function DepartmentManagerProfile() {
     async function fetchProfile() {
       try {
         const response = await fetch(
-          "http://127.0.0.1:8000/members/department/profile/",
+          `${API_URL}/members/department/profile/`,
           {
             method: "GET",
             credentials: "include", // keep Django session cookies

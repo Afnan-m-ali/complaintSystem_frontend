@@ -1,14 +1,14 @@
 "use client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-
+const API_URL = "https://hana74.pythonanywhere.com";
 export default function Logout() {
   const router = useRouter();
 
   useEffect(() => {
     async function logoutUser() {
       try {
-        await fetch("http://127.0.0.1:8000/members/logout/", {
+        await fetch(`${API_URL}/members/logout/`, {
           method: "POST",
           credentials: "include", // sends the session cookie
         });

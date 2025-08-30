@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-
+const API_URL = "https://hana74.pythonanywhere.com";
 export default function ComplaintPage() {
   const [data, setData] = useState({
     type: "Complaint",
@@ -28,7 +28,7 @@ export default function ComplaintPage() {
       formData.append("file", data.file);
     }
 
-    const res = await fetch("http://127.0.0.1:8000/members/submit/", {
+    const res = await fetch(`${API_URL}/members/submit/`, {
       method: "POST",
       body: formData,
       credentials: "include",
@@ -36,7 +36,7 @@ export default function ComplaintPage() {
     const result = await res.json();
 
     if (result.success) {
-      window.location.href = `http://localhost:3000/student/success`;
+      window.location.href = "/student/success";
     } else {
       alert(result.message || "Something went wrong");
     }

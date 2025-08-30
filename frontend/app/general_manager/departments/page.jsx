@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-
+const API_URL = "https://hana74.pythonanywhere.com";
 export default function DepartmentsTable() {
   const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -12,7 +12,7 @@ export default function DepartmentsTable() {
   // Fetch departments from backend
   const fetchDepartments = async () => {
     try {
-      const res = await fetch("http://127.0.0.1:8000/members/departments/");
+      const res = await fetch(`${API_URL}/members/departments/`);
       if (!res.ok) throw new Error("Failed to fetch departments");
       const data = await res.json();
       // Add real IDs from Django
@@ -34,7 +34,7 @@ export default function DepartmentsTable() {
     if (!confirm("Are you sure you want to delete this department?")) return;
 
     try {
-      const res = await fetch(`http://127.0.0.1:8000/members/departments/delete/${id}/`, {
+      const res = await fetch(`${API_URL}/members/departments/delete/${id}/`, {
         method: "DELETE",
       });
 

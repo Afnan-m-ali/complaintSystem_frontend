@@ -1,7 +1,7 @@
 // app/general_manager/responses/page.jsx
 "use client";
 import { useEffect, useState } from "react";
-
+const API_URL = "https://hana74.pythonanywhere.com";
 export default function ResponsesPage() {
   const [responses, setResponses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -9,7 +9,7 @@ export default function ResponsesPage() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await fetch("http://127.0.0.1:8000/members/general_manager_responses/", {
+      const res = await fetch(`${API_URL}/members/general_manager_responses/`, {
         method: "GET",
         credentials: "include",
       });

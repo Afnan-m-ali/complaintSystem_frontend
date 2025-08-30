@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-
+const API_URL = "https://hana74.pythonanywhere.com";
 export default function AddUserPage() {
   const [formData, setFormData] = useState({
     username: "",
@@ -16,7 +16,7 @@ export default function AddUserPage() {
 
   // Fetch departments on page load
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/members/departments/")
+    fetch(`${API_URL}/members/departments/`)
       .then((res) => res.json())
       .then((data) => setDepartments(data.departments))
       .catch((err) => console.error("Failed to load departments:", err));
@@ -34,7 +34,7 @@ export default function AddUserPage() {
     setMessage("");
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/members/addUser/", {
+      const res = await fetch(`${API_URL}/members/addUser/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),

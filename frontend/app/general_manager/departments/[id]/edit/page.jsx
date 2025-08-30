@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-
+const API_URL = "https://hana74.pythonanywhere.com";
 export default function EditDepartmentPage() {
   const router = useRouter();
   const params = useParams();
@@ -14,7 +14,7 @@ export default function EditDepartmentPage() {
     // Fetch department details from backend
     const fetchDepartment = async () => {
       try {
-        const res = await fetch(`http://127.0.0.1:8000/members/departments/`);
+        const res = await fetch(`${API_URL}/members/departments/`);
         if (!res.ok) throw new Error("Failed to fetch departments");
         const data = await res.json();
         const depts = data.departments.map((name, idx) => ({ id: idx + 1, name }));
@@ -30,7 +30,7 @@ export default function EditDepartmentPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(`http://127.0.0.1:8000/members/departments/${department.id}/edit/`, {
+      const res = await fetch(`${API_URL}/members/departments/${department.id}/edit/`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: department.name }),

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-
+const API_URL = "https://hana74.pythonanywhere.com";
 export default function StudentProfile() {
   const [student, setStudent] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -9,7 +9,7 @@ export default function StudentProfile() {
   useEffect(() => {
     async function fetchStudent() {
       try {
-        const res = await fetch("http://127.0.0.1:8000/members/student/profile/", {
+        const res = await fetch("${API_URL}/members/student/profile/", {
           method: "GET",
           credentials: "include",
         });
