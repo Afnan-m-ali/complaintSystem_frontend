@@ -159,6 +159,16 @@ export default function AddUserPage() {
           <button
             type="button"
             className="px-4 py-2 bg-gray-600 text-white text-sm rounded-md hover:bg-gray-700"
+            onClick={() =>
+              setFormData({
+                username: "",
+                email: "",
+                name: "",
+                role: "DepartmentManager", // reset to default
+                dept: "",
+                password: "",
+              })
+            }
           >
             Cancel
           </button>

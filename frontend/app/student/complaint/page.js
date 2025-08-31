@@ -19,6 +19,7 @@ export default function ComplaintPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Submitting complaint...");
 
     const formData = new FormData();
     formData.append("type", data.type);
@@ -28,6 +29,7 @@ export default function ComplaintPage() {
       formData.append("file", data.file);
     }
 
+    
     const res = await fetch(`${API_URL}/members/submit/`, {
       method: "POST",
       body: formData,

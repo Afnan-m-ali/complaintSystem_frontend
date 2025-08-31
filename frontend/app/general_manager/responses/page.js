@@ -32,7 +32,7 @@ export default function ResponsesPage() {
   const handleToggle = async (id, currentVisible) => {
     try {
       const res = await fetch(
-        `http://127.0.0.1:8000/members/general_manager_responses/${id}/publish/`,
+        `${API_URL}/members/general_manager_responses/${id}/publish/`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

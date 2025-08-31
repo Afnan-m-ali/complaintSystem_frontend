@@ -1,24 +1,41 @@
 "use client";
 import { useEffect, useState } from "react";
-
+const API_URL = "https://hana74.pythonanywhere.com";
 export default function UsersListPage() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // const fetchUsers = async () => {
+  //   try {
+  //     const res = await fetch(`${API_URL}/members/users/`);
+  //     if (!res.ok) throw new Error("Failed to fetch users");
+  //     const data = await res.json();
+  //     const filteredUsers = data.users.filter(u => u.role !== "GeneralManager");
+  //     setUsers(filteredUsers);
+  //     setLoading(false);
+  //   } catch (err) {
+  //     setError(err.message);
+  //     setLoading(false);
+  //   }
+  // };
   const fetchUsers = async () => {
     try {
-      const res = await fetch("http://127.0.0.1:8000/members/users/");
-      if (!res.ok) throw new Error("Failed to fetch users");
+      const res = await fetch(`${API_URL}/members/users/`);
+      console.log("Fetch status:", res.status, res.statusText);
+      if (!res.ok) throw new Error(`Failed to fetch users: ${res.status}`);
       const data = await res.json();
+      console.log("API data:", data);
       const filteredUsers = data.users.filter(u => u.role !== "GeneralManager");
       setUsers(filteredUsers);
       setLoading(false);
     } catch (err) {
+      console.error("Fetch error:", err);
       setError(err.message);
       setLoading(false);
     }
   };
+
 
   useEffect(() => {
     fetchUsers();
@@ -28,7 +45,7 @@ export default function UsersListPage() {
     if (!confirm("Are you sure you want to delete this user?")) return;
 
     try {
-      const res = await fetch(`http://127.0.0.1:8000/members/deleteUser/${userId}/`, {
+      const res = await fetch(`${API_URL}/members/deleteUser/${userId}/`, {
         method: "DELETE",
       });
 
@@ -71,11 +88,10 @@ export default function UsersListPage() {
               {users.map((u, idx) => (
                 <tr
                   key={u.UserId}
-                  className={`${
-                    idx % 2 === 0
+                  className={`${idx % 2 === 0
                       ? "bg-white dark:bg-gray-800"
                       : "bg-gray-50 dark:bg-gray-700"
-                  } hover:bg-gray-100 dark:hover:bg-gray-600 transition`}
+                    } hover:bg-gray-100 dark:hover:bg-gray-600 transition`}
                 >
                   <td className="py-3 px-4 text-blue-800 dark:text-blue-400">{u.UserId}</td>
                   <td className="py-3 px-4 text-blue-800 dark:text-blue-400">{u.username}</td>

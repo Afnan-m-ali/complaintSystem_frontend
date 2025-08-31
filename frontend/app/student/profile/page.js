@@ -9,7 +9,7 @@ export default function StudentProfile() {
   useEffect(() => {
     async function fetchStudent() {
       try {
-        const res = await fetch("${API_URL}/members/student/profile/", {
+        const res = await fetch(`${API_URL}/members/student/profile/`, {
           method: "GET",
           credentials: "include",
         });

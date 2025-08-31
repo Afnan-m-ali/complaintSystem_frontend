@@ -51,7 +51,7 @@ export default function AllComplaintsPage() {
     if (!deptId) return alert("Select a department first");
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/members/allComplaints/", {
+      const res = await fetch(`${API_URL}/members/allComplaints/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
