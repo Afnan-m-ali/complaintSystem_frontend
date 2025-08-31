@@ -11,7 +11,8 @@ export default function TrackComplaintPage() {
 
     try {
       const res = await fetch(
-        `${API_URL}/members/track/?tracking_code=${trackingCode}`
+        `${API_URL}/members/track/?tracking_code=${trackingCode}`,
+        { credentials: "include" }
       );
       const data = await res.json();
 

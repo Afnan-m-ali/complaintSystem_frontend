@@ -21,9 +21,9 @@ export default function GeneralManagerProfile() {
   };
 
   return (
-    <div className="p-8 bg-gray-900 min-h-screen text-gray-100">
+    <div className="p-8 bg-gray-50 dark:bg-gray-900 min-h-screen text-gray-900 dark:text-gray-100">
       {/* Users Management Card */}
-      <div className="bg-gray-800 shadow-lg rounded-2xl p-6 mb-6 transition-colors hover:bg-gray-700">
+      <div className="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-6 mb-6 transition-colors hover:bg-gray-100 dark:hover:bg-gray-700">
         <h2 className="text-xl font-semibold mb-4">Users</h2>
         <div className="flex gap-4">
           <button
@@ -42,7 +42,7 @@ export default function GeneralManagerProfile() {
       </div>
 
       {/* Departments Management Card */}
-      <div className="bg-gray-800 shadow-lg rounded-2xl p-6 mb-6 transition-colors hover:bg-gray-700">
+      <div className="bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-6 mb-6 transition-colors hover:bg-gray-100 dark:hover:bg-gray-700">
         <h2 className="text-xl font-semibold mb-4">Departments</h2>
         <div className="flex gap-4">
           <button

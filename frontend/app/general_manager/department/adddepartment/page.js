@@ -15,6 +15,7 @@ export default function AddDepartmentPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ DepartmentName: deptName }),
+        credentials: "include"
       });
 
       const text = await res.text();

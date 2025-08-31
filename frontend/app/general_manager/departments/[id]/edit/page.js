@@ -14,7 +14,10 @@ export default function EditDepartmentPage() {
     // Fetch department details from backend
     const fetchDepartment = async () => {
       try {
-        const res = await fetch(`${API_URL}/members/departments/`);
+        const res = await fetch(
+          `${API_URL}/members/departments/`,
+          { credentials: "include" }
+        );
         if (!res.ok) throw new Error("Failed to fetch departments");
         const data = await res.json();
         const depts = data.departments.map((name, idx) => ({ id: idx + 1, name }));
@@ -34,6 +37,7 @@ export default function EditDepartmentPage() {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: department.name }),
+        credentials: "include"
       });
 
       if (!res.ok) {

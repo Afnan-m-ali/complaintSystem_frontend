@@ -1,32 +1,27 @@
 "use client";
 import { useEffect, useState } from "react";
+
 const API_URL = "https://hana74.pythonanywhere.com";
+
 export default function UsersListPage() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // const fetchUsers = async () => {
-  //   try {
-  //     const res = await fetch(`${API_URL}/members/users/`);
-  //     if (!res.ok) throw new Error("Failed to fetch users");
-  //     const data = await res.json();
-  //     const filteredUsers = data.users.filter(u => u.role !== "GeneralManager");
-  //     setUsers(filteredUsers);
-  //     setLoading(false);
-  //   } catch (err) {
-  //     setError(err.message);
-  //     setLoading(false);
-  //   }
-  // };
   const fetchUsers = async () => {
     try {
-      const res = await fetch(`${API_URL}/members/users/`);
+      const res = await fetch(`${API_URL}/members/users/`, {
+        credentials: "include", // ✅ send session cookies
+      });
+
       console.log("Fetch status:", res.status, res.statusText);
+
       if (!res.ok) throw new Error(`Failed to fetch users: ${res.status}`);
       const data = await res.json();
       console.log("API data:", data);
-      const filteredUsers = data.users.filter(u => u.role !== "GeneralManager");
+
+      // ✅ Adjust key depending on your backend response
+      const filteredUsers = data.users.filter((u) => u.role !== "GeneralManager");
       setUsers(filteredUsers);
       setLoading(false);
     } catch (err) {
@@ -35,7 +30,6 @@ export default function UsersListPage() {
       setLoading(false);
     }
   };
-
 
   useEffect(() => {
     fetchUsers();
@@ -47,21 +41,34 @@ export default function UsersListPage() {
     try {
       const res = await fetch(`${API_URL}/members/deleteUser/${userId}/`, {
         method: "DELETE",
+        credentials: "include", // ✅ send session cookies
       });
 
       if (res.ok) {
-        setUsers(users.filter((u) => u.UserId !== userId));
+        // Option 1: remove locally
+        setUsers((prev) => prev.filter((u) => u.UserId !== userId && u.id !== userId));
+
+        // Option 2 (safer): re-fetch all users
+        // await fetchUsers();
       } else {
-        const data = await res.json();
-        alert("Error deleting user: " + (data.error || "Unknown error"));
+        let errorMsg = "Unknown error";
+        try {
+          const data = await res.json();
+          errorMsg = data.error || errorMsg;
+        } catch {
+          errorMsg = await res.text();
+        }
+        alert("Error deleting user: " + errorMsg);
       }
     } catch (err) {
       alert("Server error: " + err.message);
     }
   };
 
-  if (loading) return <p className="text-center mt-10 text-gray-500 dark:text-gray-300">Loading...</p>;
-  if (error) return <p className="text-center mt-10 text-red-500 dark:text-red-400">{error}</p>;
+  if (loading)
+    return <p className="text-center mt-10 text-gray-500 dark:text-gray-300">Loading...</p>;
+  if (error)
+    return <p className="text-center mt-10 text-red-500 dark:text-red-400">{error}</p>;
 
   return (
     <div className="flex justify-center min-h-screen bg-gray-50 dark:bg-gray-900 p-6 transition-colors">
@@ -87,22 +94,37 @@ export default function UsersListPage() {
             <tbody>
               {users.map((u, idx) => (
                 <tr
-                  key={u.UserId}
-                  className={`${idx % 2 === 0
+                  key={u.UserId || u.id}
+                  className={`${
+                    idx % 2 === 0
                       ? "bg-white dark:bg-gray-800"
                       : "bg-gray-50 dark:bg-gray-700"
-                    } hover:bg-gray-100 dark:hover:bg-gray-600 transition`}
+                  } hover:bg-gray-100 dark:hover:bg-gray-600 transition`}
                 >
-                  <td className="py-3 px-4 text-blue-800 dark:text-blue-400">{u.UserId}</td>
-                  <td className="py-3 px-4 text-blue-800 dark:text-blue-400">{u.username}</td>
-                  <td className="py-3 px-4 text-blue-800 dark:text-blue-400">{u.name}</td>
-                  <td className="py-3 px-4 text-blue-800 dark:text-blue-400">{u.email}</td>
-                  <td className="py-3 px-4 text-blue-800 dark:text-blue-400">{u.role}</td>
-                  <td className="py-3 px-4 text-blue-800 dark:text-blue-400">{u.gpa}</td>
-                  <td className="py-3 px-4 text-blue-800 dark:text-blue-400">{u.department || "-"}</td>
+                  <td className="py-3 px-4 text-blue-800 dark:text-blue-400">
+                    {u.UserId || u.id}
+                  </td>
+                  <td className="py-3 px-4 text-blue-800 dark:text-blue-400">
+                    {u.username}
+                  </td>
+                  <td className="py-3 px-4 text-blue-800 dark:text-blue-400">
+                    {u.name}
+                  </td>
+                  <td className="py-3 px-4 text-blue-800 dark:text-blue-400">
+                    {u.email}
+                  </td>
+                  <td className="py-3 px-4 text-blue-800 dark:text-blue-400">
+                    {u.role}
+                  </td>
+                  <td className="py-3 px-4 text-blue-800 dark:text-blue-400">
+                    {u.gpa}
+                  </td>
+                  <td className="py-3 px-4 text-blue-800 dark:text-blue-400">
+                    {u.department || "-"}
+                  </td>
                   <td className="py-3 px-4 flex gap-3 justify-center">
                     <button
-                      onClick={() => handleDelete(u.UserId)}
+                      onClick={() => handleDelete(u.UserId || u.id)}
                       className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg shadow transition"
                     >
                       Delete
@@ -113,7 +135,10 @@ export default function UsersListPage() {
 
               {users.length === 0 && (
                 <tr>
-                  <td colSpan="8" className="py-4 text-center text-gray-500 dark:text-gray-400">
+                  <td
+                    colSpan="8"
+                    className="py-4 text-center text-gray-500 dark:text-gray-400"
+                  >
                     No users found
                   </td>
                 </tr>
