@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 const API_URL = "https://hana74.pythonanywhere.com";
+
 export default function AddDepartmentPage() {
   const [deptName, setDeptName] = useState("");
   const [message, setMessage] = useState("");
@@ -15,7 +16,7 @@ export default function AddDepartmentPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ DepartmentName: deptName }),
-        credentials: "include"
+        credentials: "include",
       });
 
       const text = await res.text();
@@ -33,11 +34,7 @@ export default function AddDepartmentPage() {
         setMessage("✅ Department added successfully!");
         setDeptName(""); // clear input
       } else {
-        if (data.error) {
-          setMessage("❌ " + data.error);
-        } else {
-          setMessage("❌ Something went wrong.");
-        }
+        setMessage(data.error ? "❌ " + data.error : "❌ Something went wrong.");
       }
     } catch (error) {
       setMessage("❌ Request failed: " + error.message);
@@ -45,14 +42,17 @@ export default function AddDepartmentPage() {
   };
 
   return (
-    <div className="max-w-lg mx-auto mt-10 p-6 bg-gray-800 border border-gray-700 rounded-lg shadow-lg text-gray-100">
+    <div className="max-w-lg mx-auto mt-10 p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg text-gray-900 dark:text-gray-100 transition-colors">
       <h2 className="text-xl font-semibold text-center mb-6">
         Add Department
       </h2>
 
       <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="deptName" className="block text-sm font-medium mb-1">
+          <label
+            htmlFor="deptName"
+            className="block text-sm font-medium mb-1"
+          >
             Department Name
           </label>
           <input
@@ -61,7 +61,7 @@ export default function AddDepartmentPage() {
             value={deptName}
             onChange={(e) => setDeptName(e.target.value)}
             placeholder="Enter department name"
-            className="mt-1 w-full px-3 py-2 border border-gray-600 rounded-md bg-gray-900 text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+            className="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
             required
           />
         </div>
@@ -78,7 +78,15 @@ export default function AddDepartmentPage() {
       </form>
 
       {message && (
-        <p className="mt-4 text-sm text-center text-gray-300">{message}</p>
+        <p
+          className={`mt-4 text-sm text-center ${
+            message.startsWith("✅")
+              ? "text-green-600 dark:text-green-400"
+              : "text-red-600 dark:text-red-400"
+          }`}
+        >
+          {message}
+        </p>
       )}
     </div>
   );
